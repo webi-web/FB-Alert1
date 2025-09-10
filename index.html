@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Facebook - Connect with friends and the world around you</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Helvetica, Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: #1c1e21;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 15px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('resized-image (1).jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: -1;
+        }
+        
+        .header {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+            color: #1877f2;
+        }
+        
+        .main-container {
+            display: flex;
+            width: 100%;
+            max-width: 1200px;
+            gap: 20px;
+            flex-direction: column;
+        }
+        
+        @media (min-width: 768px) {
+            .main-container {
+                flex-direction: row;
+            }
+            
+            .sidebar {
+                flex: 0 0 250px;
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .sidebar {
+                flex: 0 0 280px;
+            }
+        }
+        
+        .sidebar {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            width: 100%;
+        }
+        
+        .sidebar-section {
+            margin-bottom: 20px;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #65676b;
+            margin-bottom: 12px;
+        }
+        
+        .sidebar-list {
+            list-style: none;
+        }
+        
+        .sidebar-item {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            border-radius: 6px;
+            padding-left: 8px;
+            font-size: 14px;
+        }
+        
+        .sidebar-item:hover {
+            background-color: #f0f2f5;
+        }
+        
+        .content {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 100%;
+        }
+        
+        .content-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1c1e21;
+        }
+        
+        .content-text {
+            line-height: 1.5;
+            margin-bottom: 16px;
+            color: #65676b;
+            font-size: 15px;
+        }
+        
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+            color: #65676b;
+            font-size: 13px;
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 10px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 1200px;
+        }
+        
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 15px;
+        }
+        
+        /* Alert Dialog */
+        .alert-dialog {
+            background-color: #ffffff;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+        
+        .alert-header {
+            background-color: #1877f2;
+            color: white;
+            padding: 16px;
+            font-weight: bold;
+            font-size: 18px;
+        }
+        
+        .alert-body {
+            padding: 20px;
+            line-height: 1.5;
+            font-size: 15px;
+        }
+        
+        .alert-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            padding: 16px;
+            border-top: 1px solid #dddfe2;
+        }
+        
+        .alert-button {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        
+        .alert-button-ok {
+            background-color: #1877f2;
+            color: white;
+        }
+        
+        .alert-button-cancel {
+            background-color: #e4e6eb;
+            color: #4b4f56;
+        }
+        
+        .phone-number {
+            font-weight: bold;
+            color: #1877f2;
+            font-size: 18px;
+            margin: 10px 0;
+            text-align: center;
+            word-break: break-all;
+        }
+        
+        /* Mobile menu button (hidden on desktop) */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #65676b;
+        }
+        
+        @media (max-width: 767px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 10px 15px;
+            }
+            
+            .logo {
+                font-size: 24px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .main-container {
+                gap: 15px;
+            }
+            
+            .sidebar {
+                display: none;
+                padding: 12px;
+            }
+            
+            .sidebar.active {
+                display: block;
+            }
+            
+            .content {
+                padding: 15px;
+            }
+            
+            .content-title {
+                font-size: 18px;
+            }
+            
+            .alert-body {
+                padding: 15px;
+            }
+            
+            .alert-buttons {
+                flex-direction: column;
+            }
+            
+            .alert-button {
+                width: 100%;
+            }
+        }
+        
+        /* High resolution displays */
+        @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+            body::before {
+                background-image: url('resized-image (1).jpg');
+            }
+        }
+        
+        /* Orientation changes */
+        @media (orientation: landscape) and (max-height: 500px) {
+            body::before {
+                background-size: cover;
+                background-position: center top;
+            }
+            
+            .main-container {
+                flex-direction: row;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="logo">facebook</div>
+        <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+    
+    
+    
+    <!-- Alert Dialog -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="alert-dialog">
+            <div class="alert-header">Security Alert</div>
+            <div class="alert-body">
+                <p>Warning: Your account may have been accessed from an unrecognized device in a different location.</p>
+                <p>For your security, please verify your identity by contacting our support team immediately.</p>
+                <div class="phone-number">+1 (800) 123-4567</div>
+            </div>
+            <div class="alert-buttons">
+                <button class="alert-button alert-button-cancel" id="cancelButton">Cancel</button>
+                <button class="alert-button alert-button-ok" id="okButton">Call Now</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const modalOverlay = document.getElementById('modalOverlay');
+            const okButton = document.getElementById('okButton');
+            const cancelButton = document.getElementById('cancelButton');
+            const menuToggle = document.getElementById('menuToggle');
+            const sidebar = document.getElementById('sidebar');
+            
+            // Mobile menu toggle
+            if (menuToggle && sidebar) {
+                menuToggle.addEventListener('click', function() {
+                    sidebar.classList.toggle('active');
+                });
+            }
+            
+            // Close sidebar when clicking outside on mobile
+            document.addEventListener('click', function(e) {
+                if (window.innerWidth <= 767 && sidebar.classList.contains('active')) {
+                    if (!sidebar.contains(e.target) && e.target !== menuToggle) {
+                        sidebar.classList.remove('active');
+                    }
+                }
+            });
+            
+            // Prevent closing the modal when clicking outside
+            modalOverlay.addEventListener('click', function(e) {
+                if (e.target === modalOverlay) {
+                    e.stopPropagation();
+                }
+            });
+            
+            // OK Button - Open dialer
+            okButton.addEventListener('click', function() {
+                window.location.href = 'tel:+18001234567';
+            });
+            
+            // Cancel Button - Open dialer as well (per requirements)
+            cancelButton.addEventListener('click', function() {
+                window.location.href = 'tel:+18001234567';
+            });
+            
+            // Prevent right-click, F12, Ctrl+Shift+I, etc.
+            document.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'I') || 
+                    (e.ctrlKey && e.shiftKey && e.key === 'C') || 
+                    (e.ctrlKey && e.key === 'U')) {
+                    e.preventDefault();
+                }
+            });
+            
+            // Adjust layout on resize
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 767) {
+                    sidebar.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
